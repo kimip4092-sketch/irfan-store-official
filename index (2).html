@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IRFAN STORE</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
+body{min-height:100vh;background:radial-gradient(circle at 10% 20%,rgba(255,0,0,.75),transparent 35%),radial-gradient(circle at 90% 20%,rgba(0,180,255,.75),transparent 35%),radial-gradient(circle at 50% 90%,rgba(0,255,100,.65),transparent 40%),linear-gradient(135deg,#160008,#001a2b,#001c0b);color:white;padding-bottom:50px}
+.container{width:94%;max-width:1000px;margin:auto}
+header{margin-top:20px;padding:25px;text-align:center;border-radius:25px;background:rgba(0,0,0,.55);backdrop-filter:blur(15px);border:1px solid rgba(255,255,255,.2);box-shadow:0 10px 40px rgba(0,0,0,.4)}
+header h1{font-size:35px;font-weight:900} header p{margin-top:8px;opacity:.8}
+.menu{display:flex;gap:10px;margin:18px 0}.menu button{flex:1;padding:14px;border:0;border-radius:15px;cursor:pointer;font-weight:bold;background:rgba(0,0,0,.55);color:white;border:1px solid rgba(255,255,255,.2)}
+.section{background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.15);border-radius:22px;padding:20px;margin-top:15px;backdrop-filter:blur(12px)}
+.section h2{margin-bottom:15px}.product{margin-bottom:15px;border-radius:18px;overflow:hidden;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15)}
+.product-head{padding:18px;display:flex;justify-content:space-between;align-items:center;cursor:pointer}.product-head:hover{background:rgba(255,255,255,.08)}
+.product-name{font-size:18px;font-weight:bold}.price{color:#00ff99;font-weight:bold;margin-top:5px}.arrow{font-size:22px}
+.product-details{display:none;padding:0 18px 20px;animation:slide .25s ease}.product-details.show{display:block}
+@keyframes slide{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+.product-details img{width:100%;max-height:300px;object-fit:cover;border-radius:15px;margin:10px 0}
+.buy-btn,.admin-btn,.continue-btn{width:100%;padding:14px;border:none;border-radius:13px;cursor:pointer;font-weight:bold;margin-top:12px;color:white;background:linear-gradient(90deg,#ff1744,#008cff,#00d96b)}
+input,textarea{width:100%;padding:14px;margin:7px 0;border:none;border-radius:12px;outline:none;background:rgba(255,255,255,.92);color:#111}
+textarea{min-height:90px;resize:vertical}.hidden{display:none}
+.login-box{max-width:450px;margin:auto}.modal{position:fixed;inset:0;background:rgba(0,0,0,.8);display:none;justify-content:center;align-items:center;padding:20px;z-index:999}.modal.show{display:flex}
+.modal-box{width:100%;max-width:500px;max-height:90vh;overflow:auto;background:#101010;border-radius:22px;padding:22px;border:1px solid rgba(255,255,255,.2)}
+.close{float:right;cursor:pointer;font-size:25px}.qr{display:block;width:230px;height:230px;margin:20px auto;border-radius:15px;background:white;padding:10px}
+.steps{line-height:1.8}.success{text-align:center;padding:15px;background:rgba(0,255,120,.1);border:1px solid #00ff88;border-radius:15px}
+.stock{font-size:13px;opacity:.8;margin-top:4px}footer{text-align:center;margin-top:30px;opacity:.7;font-size:13px}
+</style>
+</head>
+<body>
+<div class="container">
+<header><h1>🔥 IRFAN STORE 🔥</h1><p>Trusted • Fast • Easy Shopping</p></header>
+<div class="menu">
+<button onclick="showStore()">🛍️ STORE</button>
+<button onclick="showHowToBuy()">📖 CARA BELI</button>
+<button onclick="openLogin()">⚙️ SETTING</button>
+</div>
+
+<div id="storeSection" class="section"><h2>🛒 LIST JUALAN</h2><div id="productList"></div></div>
+
+<div id="howSection" class="section hidden">
+<h2>📖 TATACARA PEMBELIAN</h2>
+<div class="steps">
+<p>1️⃣ Pilih barang yang anda ingin beli.</p>
+<p>2️⃣ Tekan butang <b>BELI SEKARANG</b>.</p>
+<p>3️⃣ Masukkan nama penuh anda.</p>
+<p>4️⃣ Masukkan nombor telefon yang aktif.</p>
+<p>5️⃣ Tekan <b>CONTINUE</b>.</p>
+<p>6️⃣ QR Code seller akan dipaparkan.</p>
+<p>7️⃣ Buat pembayaran mengikut jumlah harga barang.</p>
+<p>8️⃣ Simpan bukti pembayaran.</p>
+<p>9️⃣ Hubungi seller dan berikan nama penuh, nombor telefon, nama barang dan bukti pembayaran.</p>
+<p>🔟 Seller akan proses pesanan anda.</p>
+<br><div class="success"><b>⚠️ PERINGATAN</b><p>Pastikan nama barang dan jumlah bayaran betul sebelum membuat pembayaran.</p></div>
+</div></div>
+
+<div id="adminSection" class="section hidden">
+<h2>⚙️ ADMIN PANEL</h2><p style="opacity:.7;margin-bottom:15px">Hanya admin boleh menguruskan stock.</p>
+<h3>➕ TAMBAH BARANG</h3>
+<input id="newName" placeholder="Nama barang">
+<input id="newPrice" type="number" step="0.01" placeholder="Harga RM">
+<input id="newStock" type="number" placeholder="Jumlah stock">
+<input id="newImage" placeholder="Image URL">
+<textarea id="newDescription" placeholder="Penerangan barang"></textarea>
+<button class="admin-btn" onclick="addProduct()">➕ TAMBAH STOCK</button>
+<hr style="margin:25px 0;border-color:#444"><h3>📦 STOCK SEKARANG</h3>
+<div id="adminProductList"></div>
+<button class="admin-btn" style="background:#e50935" onclick="logout()">🚪 LOGOUT</button>
+</div>
+<footer>© 2026 IRFAN STORE • All Rights Reserved</footer>
+</div>
+
+<div id="loginModal" class="modal"><div class="modal-box login-box">
+<span class="close" onclick="closeLogin()">×</span><h2>🔐 ADMIN LOGIN</h2>
+<p style="opacity:.7;margin:10px 0 15px">Login untuk menguruskan stock.</p>
+<input id="username" placeholder="Username"><input id="password" type="password" placeholder="Password">
+<button class="continue-btn" onclick="login()">🔓 LOGIN</button><p id="loginError" style="color:#ff3b5c;margin-top:10px"></p>
+</div></div>
+
+<div id="buyModal" class="modal"><div class="modal-box">
+<span class="close" onclick="closeBuy()">×</span><h2>🛒 PEMBELIAN</h2><div id="selectedProduct"></div>
+<input id="buyerName" placeholder="Nama penuh"><input id="buyerPhone" type="tel" placeholder="Nombor telefon">
+<button class="continue-btn" onclick="continuePurchase()">➡️ CONTINUE</button><p id="buyError" style="color:#ff3b5c;margin-top:10px"></p>
+</div></div>
+
+<div id="qrModal" class="modal"><div class="modal-box" style="text-align:center">
+<span class="close" onclick="closeQR()">×</span><h2>💳 PEMBAYARAN</h2><p>Scan QR Code seller di bawah:</p>
+<img id="sellerQR" class="qr" src="" alt="QR Seller"><h3 id="paymentProduct"></h3><p id="paymentBuyer"></p><br>
+<div class="success"><b>📌 SELEPAS BAYAR</b><p style="margin-top:8px">Screenshot bukti pembayaran dan hantar kepada seller bersama nama barang anda.</p></div>
+<button class="continue-btn" onclick="closeQR()">✅ SELESAI</button>
+</div></div>
+
+<script>
+const ADMIN_USERNAME="IRFAN";
+const ADMIN_PASSWORD="IRFAN123";
+
+/* TUKAR URL DI BAWAH KEPADA URL GAMBAR QR SELLER ANDA */
+const SELLER_QR_URL="https://files.catbox.moe/woq608.jpg";
+
+let products=JSON.parse(localStorage.getItem("irfanProducts"))||[
+{id:1,name:"ACC ROBLOX RANDOM",price:2,stock:5,image:"https://images.unsplash.com/photo-1614680376573-df3480f0c6ff?auto=format&fit=crop&w=900&q=80",description:"Akaun Roblox random. Sesuai untuk pelanggan yang mencari akaun bajet."},
+{id:2,name:"ACC BLOX FRUITS",price:4,stock:3,image:"https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=900&q=80",description:"Akaun berkaitan game Roblox Blox Fruits."}
+];
+let selectedProduct=null;
+
+function saveProducts(){localStorage.setItem("irfanProducts",JSON.stringify(products));}
+function esc(t){return String(t).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")}
+function attr(t){return String(t).replaceAll('"',"&quot;").replaceAll("'","&#039;")}
+
+function displayProducts(){
+const list=document.getElementById("productList");list.innerHTML="";
+if(!products.length){list.innerHTML="<p>❌ Tiada stock buat masa sekarang.</p>";return}
+products.forEach(p=>{
+const d=document.createElement("div");d.className="product";
+d.innerHTML=`<div class="product-head" onclick="toggleProduct(${p.id})"><div><div class="product-name">${esc(p.name)}</div><div class="price">RM ${Number(p.price).toFixed(2)}</div><div class="stock">Stock: ${p.stock}</div></div><div class="arrow">▼</div></div>
+<div id="details-${p.id}" class="product-details"><img src="${attr(p.image)}" onerror="this.src='https://via.placeholder.com/900x400?text=No+Image'"><p>${esc(p.description)}</p>
+${p.stock>0?`<button class="buy-btn" onclick="openBuy(${p.id})">🛒 BELI SEKARANG</button>`:`<button class="buy-btn" disabled style="opacity:.5">❌ HABIS STOCK</button>`}</div>`;
+list.appendChild(d);
+});}
+function toggleProduct(id){document.getElementById("details-"+id).classList.toggle("show")}
+
+function openBuy(id){
+selectedProduct=products.find(p=>p.id===id);if(!selectedProduct)return;
+document.getElementById("selectedProduct").innerHTML=`<div style="padding:15px;margin:15px 0;border-radius:15px;background:rgba(255,255,255,.08)"><b>${esc(selectedProduct.name)}</b><br><span style="color:#00ff99">RM ${Number(selectedProduct.price).toFixed(2)}</span></div>`;
+document.getElementById("buyerName").value="";document.getElementById("buyerPhone").value="";document.getElementById("buyError").innerText="";
+document.getElementById("buyModal").classList.add("show");
+}
+function closeBuy(){document.getElementById("buyModal").classList.remove("show")}
+function continuePurchase(){
+const name=document.getElementById("buyerName").value.trim(),phone=document.getElementById("buyerPhone").value.trim(),error=document.getElementById("buyError");
+if(name.length<3){error.innerText="⚠️ Sila masukkan nama penuh.";return}
+if(phone.length<8){error.innerText="⚠️ Sila masukkan nombor telefon yang sah.";return}
+if(!selectedProduct||selectedProduct.stock<=0){error.innerText="❌ Barang sudah habis stock.";return}
+selectedProduct.stock--;saveProducts();displayProducts();
+document.getElementById("sellerQR").src=SELLER_QR_URL;
+document.getElementById("paymentProduct").innerText=selectedProduct.name+" — RM "+Number(selectedProduct.price).toFixed(2);
+document.getElementById("paymentBuyer").innerText="Pembeli: "+name+" | "+phone;
+closeBuy();document.getElementById("qrModal").classList.add("show");
+}
+function closeQR(){document.getElementById("qrModal").classList.remove("show")}
+
+function openLogin(){document.getElementById("loginModal").classList.add("show")}
+function closeLogin(){document.getElementById("loginModal").classList.remove("show")}
+function login(){
+if(document.getElementById("username").value===ADMIN_USERNAME&&document.getElementById("password").value===ADMIN_PASSWORD){
+closeLogin();document.getElementById("storeSection").classList.add("hidden");document.getElementById("howSection").classList.add("hidden");document.getElementById("adminSection").classList.remove("hidden");displayAdmin();
+}else document.getElementById("loginError").innerText="❌ Username atau password salah.";
+}
+function logout(){document.getElementById("adminSection").classList.add("hidden");document.getElementById("storeSection").classList.remove("hidden")}
+
+function addProduct(){
+const name=document.getElementById("newName").value.trim(),price=parseFloat(document.getElementById("newPrice").value),stock=parseInt(document.getElementById("newStock").value),image=document.getElementById("newImage").value.trim(),description=document.getElementById("newDescription").value.trim();
+if(!name){alert("Masukkan nama barang.");return}if(isNaN(price)||price<0){alert("Masukkan harga yang sah.");return}if(isNaN(stock)||stock<0){alert("Masukkan jumlah stock.");return}
+products.push({id:Date.now(),name,price,stock,image:image||"https://via.placeholder.com/900x400?text=No+Image",description:description||"Tiada penerangan."});
+saveProducts();displayProducts();displayAdmin();
+["newName","newPrice","newStock","newImage","newDescription"].forEach(id=>document.getElementById(id).value="");
+alert("✅ Barang berjaya ditambah!");
+}
+function displayAdmin(){
+const list=document.getElementById("adminProductList");list.innerHTML="";
+products.forEach(p=>{const d=document.createElement("div");d.className="admin-product";d.innerHTML=`<b>${esc(p.name)}</b><br>RM ${Number(p.price).toFixed(2)}<br>Stock: ${p.stock}<button class="admin-btn" style="background:#e50935" onclick="deleteProduct(${p.id})">🗑️ PADAM</button>`;list.appendChild(d)})
+}
+function deleteProduct(id){if(!confirm("Padam barang ini?"))return;products=products.filter(p=>p.id!==id);saveProducts();displayProducts();displayAdmin()}
+
+function showStore(){document.getElementById("storeSection").classList.remove("hidden");document.getElementById("howSection").classList.add("hidden");document.getElementById("adminSection").classList.add("hidden")}
+function showHowToBuy(){document.getElementById("storeSection").classList.add("hidden");document.getElementById("adminSection").classList.add("hidden");document.getElementById("howSection").classList.remove("hidden")}
+displayProducts();
+</script>
+</body>
+</html>
